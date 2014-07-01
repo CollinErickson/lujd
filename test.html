@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type='text/javascript'>
+var A4 = new Audio('A4.mp3');
+var Asharp4 = new Audio('Asharp4.mp3');
+var B4 = new Audio('B4.mp3');
+var tickRate = 10,
+    keyArrowUp    = false,
+    keyArrowDown  = false,
+    keyArrowLeft  = false,
+    keyArrowRight = false;
+
+$('body').keydown(function(e){console.log('switch, ',e.which);
+  switch (e.which) {
+    case 38:
+      keyArrowUp = true;
+      break;
+    case 40:
+      keyArrowDown = true;
+      break;
+    case 37:
+      keyArrowLeft = true;
+      break;
+    case 39:
+      keyArrowRight = true;
+      break;
+  }
+});
+
+$('body').keyup(function(e){
+  switch (e.which) {
+    case 38:
+      keyArrowUp = false;
+      break;
+    case 40:
+      keyArrowDown = false;
+      break;
+    case 37:
+      keyArrowLeft = false;
+      break;
+    case 39:
+      keyArrowRight = false;
+      break;
+  }
+});
+
+var tick = function() {
+  if (keyArrowUp) {
+    // up code
+	console.log('arrow up');
+	A4.play();
+  } else {
+	A4.pause();
+  }
+  if (keyArrowRight) {
+    // up code
+	console.log('arrow up');
+	Asharp4.play();
+  } else {
+	Asharp4.pause();
+  }
+  if (keyArrowDown) {
+    // up code
+	console.log('arrow down');
+	B4.play();
+  } else {
+	B4.pause();
+  }
+
+/* else if (keyArrowDown) {
+    // down code
+A4.pause();
+  } else if (keyArrowLeft) {
+    // left code
+  } else if (keyArrowRight) {
+    // right code
+  }
+
+  // other code
+*/
+  setTimeout(tick, tickRate);
+};
+
+tick();
+</script>
+</body>
+</html>

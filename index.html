@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Soundage</title>
+<meta charset="UTF-8">
+</head>
+<body style='background-color:black;color:white'>
+<h1 onclick='snd2.play();snd.pause()'>Hello</h1>
+<embed src="A4.mp3" autostart=true width=1 height=1 id="sound1" enablejavascript="true">
+<p onclick='console.log('clicked');document.getElementById("sound1").play();'> Click to play </p>
+<script type='text/javascript'>
+var snd=new Audio('A4-440.0.mp3');
+var snd2=new Audio('A4.mp3');
+//snd.play()
+
+function Pitch(note,octave,keyboardKey) {
+	this.filename=note+octave+'.mp3';
+	this.audio=new Audio(this.filename);
+	//this.audio2=new Audio(this.filename);
+	this.key=keyboardKey;
+	this.keyDown=function() {//console.log('should start playing, time is ',this.audio.currentTime);
+		if (this.audio.currentTime==0 || this.audio.ended) {this.audio.play()}
+		//if (this.audio.currentTime>3) {this.audio2.play()}
+		//if (this.audio.currentTime>3.2) {this.audio.pause();this.audio.currentTime=0}
+	}
+	this.keyUp=function() {
+		this.audio.pause();this.audio.currentTime=0;
+		//this.audio2.pause();this.audio2.currentTime=0;
+	}
+	//this.play=function() {this.audio.play();}
+}
+
+var A4 = new Pitch('A','4','none!');
+var Asharp4 = new Pitch('Asharp','4');
+var B4 = new Pitch('B','4');
+var keyboardToPitch = {'A':A4,'W':Asharp4,'S':B4}
+/*document.onkeydown = function(e) {//console.log('key pressed');
+	e = e || window.event;
+	var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+	//console.log(e.which,charCode,String.fromCharCode(charCode));
+	var charLetter = String.fromCharCode(charCode); 
+	if (charLetter in keyboardToPitch) {
+		//alert("Character typed: " + String.fromCharCode(charCode));
+		//console.log(keyboardToPitch[charLetter].keyDown);
+		keyboardToPitch[charLetter].keyDown();
+	}
+};
+document.onkeyup = function(e) {
+	e = e || window.event;
+	var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+	//console.log(e.which,charCode,String.fromCharCode(charCode));
+	var charLetter = String.fromCharCode(charCode); 
+	if (charLetter in keyboardToPitch) {
+		//alert("Character typed: " + String.fromCharCode(charCode));
+		//console.log(keyboardToPitch[charLetter].keyDown);
+		keyboardToPitch[charLetter].keyUp();
+	}
+
+
+};
+*/
+
+
+
+
+
+
+
+var keysDown = {};
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode]=true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode];
+}, false);
+
+function reset() {
+}
+
+function update(modifier) {
+	if (32 in keysDown || 38 in keysDown) {A4.keyDown();}
+	else {A4.keyUp();}
+}
+
+var main=function() {
+	var now= Date.now();
+	var delta = now- then;
+	//timeSinceGSChange+=delta;
+	update(delta / 1000);
+	//render();
+	then=now;
+};
+reset()
+var then = Date.now()
+setInterval(main, 1);
+
+</script>
+
+</body>
+</html>
