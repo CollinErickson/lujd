@@ -7,83 +7,93 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type='text/javascript'>
 var A4 = new Audio('A4.mp3');
-var Asharp4 = new Audio('Asharp4.mp3');
+var As4 = new Audio('As4.mp3');
 var B4 = new Audio('B4.mp3');
-var tickRate = 10,
-    keyArrowUp    = false,
-    keyArrowDown  = false,
-    keyArrowLeft  = false,
-    keyArrowRight = false;
+var C5 = new Audio('C5.mp3');
 
-$('body').keydown(function(e){console.log('switch, ',e.which);
-  switch (e.which) {
-    case 38:
-      keyArrowUp = true;
-      break;
-    case 40:
-      keyArrowDown = true;
-      break;
-    case 37:
-      keyArrowLeft = true;
-      break;
-    case 39:
-      keyArrowRight = true;
-      break;
-  }
+var notesOrder = ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B'];
+function Octave(number) {
+	this.number=number
+	this.audio = {};
+	for (var i=0;i<notesOrder.length;i++) {
+		this.audio[i] = new Audio(notesOrder[i]+this.number+'.mp3');
+
+	}
+};
+var octaves = { 4:new Octave(4)};
+
+function OctaveKeys(keys,octave) {
+	this.keys=keys;
+	this.octave=octave;
+	this.keyDown = function(key) {
+		var ind = this.keys.indexOf(key); 
+		if (ind>=0) {//console.log('found key');
+			octaves[this.octave].audio[ind].play();
+			return true;
+		}//console.log('key not found',key,ind);
+		return false;
+	};
+	this.keyUp = function(key) {
+		var ind = this.keys.indexOf(key); 
+		if (ind>=0) {//console.log('found key');
+			octaves[this.octave].audio[ind].pause();
+			octaves[this.octave].audio[ind].currentTime=0;
+			return true;
+		}//console.log('key not found');
+		return false;
+	};
+	this.setKeyMap = function () {
+		for (var i=0;i<this.keys.length;i++) {
+			keyMap[this.keys[i]]=octaves[this.octave].audio[i];
+		}
+	};
+	this.setKeyMap();
+};
+
+
+var topLeftKeys = [9,49,81,50,87,69,52,82,53,84,54,89];
+
+
+var keyMap = {72:A4,74:As4,75:B4,76:C5};
+var octavesKeys = [new OctaveKeys(topLeftKeys,4)]
+
+
+
+
+
+
+var tickRate = 10;
+var keysDown = [];
+
+$('body').keydown(function(e){
+	keysDown[e.which]= true;
 });
 
 $('body').keyup(function(e){
-  switch (e.which) {
-    case 38:
-      keyArrowUp = false;
-      break;
-    case 40:
-      keyArrowDown = false;
-      break;
-    case 37:
-      keyArrowLeft = false;
-      break;
-    case 39:
-      keyArrowRight = false;
-      break;
-  }
+	//keysDown[e.which]=false;
+	delete keysDown[e.which];
 });
 
+
 var tick = function() {
-  if (keyArrowUp) {
-    // up code
-	console.log('arrow up');
-	A4.play();
-  } else {
-	A4.pause();
-  }
-  if (keyArrowRight) {
-    // up code
-	console.log('arrow up');
-	Asharp4.play();
-  } else {
-	Asharp4.pause();
-  }
-  if (keyArrowDown) {
-    // up code
-	console.log('arrow down');
-	B4.play();
-  } else {
-	B4.pause();
-  }
-
-/* else if (keyArrowDown) {
-    // down code
-A4.pause();
-  } else if (keyArrowLeft) {
-    // left code
-  } else if (keyArrowRight) {
-    // right code
-  }
-
-  // other code
-*/
-  setTimeout(tick, tickRate);
+	for (var key in keyMap) {if (key in keysDown) {keyMap[key].play();console.log('play from keyMap');} else {keyMap[key].pause()}}
+	if (37 in keysDown) {A4.play();} else {A4.pause();};
+	if (38 in keysDown) {As4.play();} else {As4.pause();};
+	if (39 in keysDown) {B4.play();} else {B4.pause();};
+	if (85 in keysDown) {C5.play()} else {C5.pause();}
+	/*for (var key in keysDown) {
+		if (keysDown[key]==true) {
+			for (var i=0;i<octavesKeys.length;i++) {
+				octavesKeys[i].keyDown(key);
+			}
+		} else { // key in keysDown, but changed to False. Delete after stopping sound. So keyUp...
+			for (var i=0;i<octavesKeys.length;i++) {
+				octavesKeys[i].keyUp(key);
+			}
+			delete keysDown[key];
+		}
+	}*/
+	setTimeout(tick, tickRate);
 };
 
 tick();
