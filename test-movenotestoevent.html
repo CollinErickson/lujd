@@ -77,15 +77,24 @@ var keysDown = [];
 
 $('body').keydown(function(e){console.log(e.which);
 	keysDown[e.which]= true;
+	if (e.which in keyMap) {keyMap[e.which].play();}
 });
 
 $('body').keyup(function(e){
 	//keysDown[e.which]=false;
 	delete keysDown[e.which];
+	if (e.which in keyMap) {/*keyMap[e.which].currentTime=.1;*/keyMap[e.which].pause();/*console.log(e.which,keyMap[e.which].currentTime);*/}
 });
+function timerbegin() {window.setTimeout(timerend,0);}
+function timerend() {keyMap[82].pause();}
+function timerbeginall() {window.setTimeout(timerendall,0);}
+function timerendall(keyNumber) {for (var i in keyMap) {keyMap[i].pause();}}
+//keyMap[82].play();timerbegin();
+for (var i in keyMap) {keyMap[i].play();}
+timerbeginall();
 
 function setCurrentTime(obj) {obj.currentTime=0;}
-var tick = function() {
+/*var tick = function() {
 	for (var key in keyMap) {if (key in keysDown) {keyMap[key].play();} else {keyMap[key].pause();if (keyMap[key].currentTime>0){keyMap[key].currentTime=0}}}
 	if (37 in keysDown) {A4.play();} else {A4.pause();if (A4.currentTime>.1){A4.currentTime=.1;}};
 	if (38 in keysDown) {As4.play();} else {As4.pause();};
@@ -102,11 +111,11 @@ var tick = function() {
 			}
 			delete keysDown[key];
 		}
-	}*/
+	}*//*
 	setTimeout(tick, tickRate);
-};
+};*/
 
-tick();
+//tick();
 </script>
 </body>
 </html>
