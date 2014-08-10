@@ -18,17 +18,17 @@ var B4 = new Audio('B4.mp3');
 var C5 = new Audio('C5.mp3');
 
 var notesOrder = ['C','Cs','D','Ds','E','F','Fs','G','Gs','A','As','B'];
-function Octave(number,instrument) {
+function Octave(number,instrument,filetype) {
 	if (instrument==null) {instrument='';}
 	this.number=number
 	this.audio = {};
 	for (var i=0;i<notesOrder.length;i++) {
-		this.audio[i] = new Audio(instrument+notesOrder[i]+this.number+'.mp3');
+		this.audio[i] = new Audio(instrument+notesOrder[i]+this.number+filetype);
 
 	}
 };
-var octaves = { 4:new Octave(4),
-	pianomf6:new Octave(6,'piano-mf/')};
+var octaves = { 4:new Octave(4,null,'.mp3'),
+	pianomf6:new Octave(6,'piano-mf/','.mp3')};
 
 function OctaveKeys(keys,octave) {
 	this.keys=keys;
@@ -83,14 +83,23 @@ $('body').keydown(function(e){console.log(e.which);
 $('body').keyup(function(e){
 	//keysDown[e.which]=false;
 	delete keysDown[e.which];
-	if (e.which in keyMap) {/*keyMap[e.which].currentTime=.1;*/keyMap[e.which].pause();/*console.log(e.which,keyMap[e.which].currentTime);*/}
+	if (e.which in keyMap) {
+		/*keyMap[e.which].currentTime=.1;*/
+		keyMap[e.which].pause();//keyMap[e.which].currentTime=0;
+		/*console.log(e.which,keyMap[e.which].currentTime);*/}
 });
 function timerbegin() {window.setTimeout(timerend,0);}
 function timerend() {keyMap[82].pause();}
 function timerbeginall() {window.setTimeout(timerendall,0);}
-function timerendall(keyNumber) {for (var i in keyMap) {keyMap[i].pause();}}
+function timerendall(keyNumber) {
+	for (var i in keyMap) {
+		keyMap[i].pause();
+	}
+}
 //keyMap[82].play();timerbegin();
-for (var i in keyMap) {keyMap[i].play();}
+for (var i in keyMap) {
+	keyMap[i].play();
+}
 timerbeginall();
 
 function setCurrentTime(obj) {obj.currentTime=0;}
